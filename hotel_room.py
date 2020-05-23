@@ -6,7 +6,6 @@
 #  3. Print out each room along with the individual items and values. This needs to be properly formatted.
 #  4. Accept a budget from the user in $ and list only those rooms which will cost less than or equal to his budget.
 
-
 class room:
     def __init__(self, name, item_list):
         self.name = name
@@ -46,24 +45,35 @@ class room:
 
     def print_room(self):
         self.amount = self.calculate_amount()
-        print('The amount for the ' + str(self.name) + ' room you have opted is $' + str(self.amount) + ' with the following items ' + str(self.item_list))
+        print('The amount for the ' + str(self.name) + ' room you have opted is $' + str(
+            self.amount) + ' with the following items ' + str(self.item_list))
 
 
 class hotel(room):
     def __init__(self):
         self.name = input("Enter a hotel name: ")
+        print()
         self.room_count = 0
         self.rooms = []
         while True:
             if self.room_count > 0:
                 add_more_room = input("Do you want to add one more room? yes/no: ")
-                add_more_room.lower()
-                if add_more_room == 'no':
+                lower_add_room = add_more_room.lower()
+                while True:
+                    if lower_add_room == 'yes':
+                        break
+                    elif lower_add_room == 'no':
+                        break
+                    else:
+                        lower_add_room = input("enter a valid answer: ")
+                if lower_add_room == 'no':
                     break
-            room_name = input('Enter a room name under ' + self.name + ' hotel ')
-            print('You can select ' + str(room_name) + ' with any of the items below (5 or more items)')
+            room_name = input('Enter a room name under \"' + self.name.capitalize() + '\" hotel: ')
+            print()
+            print('You can select ' + str(room_name.capitalize()) + ' with any of the items below (5 or more items)')
             print("AC - $10, Fridge - $10, Bed - $5, Fan - $2, Geyser - $5, Sofa - $10, TV - $10, Light -$2 ")
-            print("You can type only the name of the items with spaces in between")
+            print("<---- You can type only the name of the items with spaces in between and can add same item multiple times ---->")
+            print()
             input_string = input()
             item_list = input_string.split()
             while True:
@@ -80,16 +90,38 @@ class hotel(room):
             self.room_count += 1
         for i in range(self.room_count):
             self.rooms[i].print_room()
+        print()
         need_budget = input("Do you need budget help from our side? yes/no: ")
-        if need_budget == 'yes':
-            budget = int(input("Enter the budget of your choice "))
-            print("Below are the rooms that comes under your budget")
+        lower_need_budget = need_budget.lower()
+        while True:
+            if lower_need_budget == 'yes':
+                break
+            elif lower_need_budget == 'no':
+                break
+            else:
+                lower_need_budget = input("enter a valid answer: ")
+        if lower_need_budget == 'yes':
+            budget = int(input("Enter the budget of your choice: "))
+            budget_rooms = False
+            print('-----------------------------------------------------------------------------')
+            between = " " * 10
+            print('{between}Rooms under your budget{between}Price in ${between}'.format(between=between))
             for i in range(self.room_count):
                 if self.rooms[i].amount <= budget:
-                    print(self.rooms[i].name, '\t $', self.rooms[i].amount)
-            print("You can select any of the rooms listed above, Thank you for selecting " + str(self.name))
-        if need_budget == 'no':
-            print("You can select any of the rooms listed above, Thank you for selecting " + str(self.name))
+                    budget_rooms = True
+                    print('{between}{room:<{room_width}}{between}{price:>{price_width}}{between}'.format(
+                        room=self.rooms[i].name.capitalize(), room_width=len('Rooms under your budget'),
+                        between=between, price=self.rooms[i].amount, price_width=len('Price in $')))
+            print('-----------------------------------------------------------------------------')
+            if budget_rooms is False:
+                print("Sorry you didn't add rooms in your budget! Thanks for choosing " + str(self.name.capitalize()))
+            if budget_rooms is True:
+                print("You can select any of the rooms listed above, Thank you for selecting " + str(
+                    self.name.capitalize()))
+        if lower_need_budget == 'no':
+            print(
+                "You can select any of the rooms listed above, Thank you for selecting " + str(self.name.capitalize()))
 
 
 hotel_1 = hotel()
+input("Press enter to exit ")
